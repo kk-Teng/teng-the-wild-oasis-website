@@ -4,7 +4,7 @@ import background from "@/public/bg.png";
 
 export default function Page() {
     return (
-        <div className={ 'w-full h-full flex items-center justify-center gap-10 text-slate-50 flex-col mt-24' }>
+        <div className={ 'w-full h-full flex items-center mt-24 gap-10 text-slate-50 flex-col' }>
             <Image
                 fill
                 src={ background }

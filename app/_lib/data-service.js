@@ -44,7 +44,7 @@ export const getCabins = async function () {
 
     if (error) {
         console.error(error);
-        throw new Error('Cabins could not be loaded');
+        throw new Error('Cabins.js could not be loaded');
     }
 
     return data;
