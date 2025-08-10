@@ -1,17 +1,34 @@
-import Link from "next/link";
+'use client'
+import HighLightNavLink from "@/app/_components/HighLightNavLink";
 
 export default function Navigation() {
     return (
         <ul className={ 'flex gap-16 z-10 items-center' }>
             <li>
-                <Link href={ "cabins" } className={ 'hover:text-yellow-500 transition-colors' }>cabins</Link>
+                <HighLightNavLink href={ 'cabins' }
+                                  highLightClassName={ 'text-yellow-500' }
+                                  normalClassName={ 'hover:text-yellow-500 transition-colors text-xl' }
+                >cabins</HighLightNavLink>
             </li>
             <li>
-                <Link href={ "about" } className={ 'hover:text-yellow-500 transition-colors text-xl' }>about</Link>
+                <HighLightNavLink
+                    href={ 'about' }
+                    highLightClassName={ 'text-yellow-500' }
+                    normalClassName={ 'hover:text-yellow-500 transition-colors text-xl' }
+                >
+                    about
+                </HighLightNavLink>
             </li>
             <li>
-                <Link href={ "account" } className={ 'hover:text-yellow-500 transition-colors' }>guest area</Link>
+                <HighLightNavLink
+                    href={ 'account' }
+                    highLightClassName={ 'text-yellow-500' }
+                    normalClassName={ 'hover:text-yellow-500 transition-colors text-xl' }
+                >
+                    account
+                </HighLightNavLink>
             </li>
         </ul>
     );
 }
+
