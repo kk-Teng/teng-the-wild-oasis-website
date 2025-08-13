@@ -1,6 +1,11 @@
 import { EyeSlashIcon, MapPinIcon, UsersIcon } from "@heroicons/react/24/solid";
 import Image from "next/image";
 import { getCabin, getCabins } from "@/app/_lib/data-service";
+import { unstable_noStore } from "next/cache";
+
+// TODO data will be always new for every request when revalidate equals to 0. You can think it's interval of fetching data from server to fresh page.
+// TODO seconds
+export const revalidate = 15
 
 // TODO dynamic metadata
 // function's params only contain params and searchParams and both of them are promise
@@ -18,16 +23,17 @@ export async function generateStaticParams() {
     const cabinIds = cabins.map(cabin => ({
         cabinId: String(cabin.id)
     }))
-    console.log(cabinIds)
     return cabinIds
 }
+
+
 
 export default async function Page({ params }) {
 
     const { cabinId } = await params
 
-    const { id, name, maxCapacity, regularPrice, discount, image, description } =
-        await getCabin(cabinId);
+    const { id, name, maxCapacity, regularPrice, discount, image, description }
+        = await getCabin(cabinId);
 
     return (
         <div className="max-w-7xl mx-auto select-none mt-8">

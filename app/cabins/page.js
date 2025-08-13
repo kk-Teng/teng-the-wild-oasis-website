@@ -1,8 +1,15 @@
 import Cabins from "@/app/cabins/Cabins";
 import Loading from "@/app/cabins/_loading";
 import { Suspense } from "react";
+import { unstable_noStore } from "next/cache";
+
+export const revalidate = 15
 
 export default async function Page() {
+
+    // TODO  always refresh <==> revalidate = 0
+    unstable_noStore()
+
     return (
         <div>
             <h1 className="text-4xl mb-5 text-yellow-400 font-medium">
