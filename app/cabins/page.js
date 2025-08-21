@@ -1,14 +1,18 @@
 import Cabins from "@/app/cabins/Cabins";
 import Loading from "@/app/cabins/_loading";
 import { Suspense } from "react";
-import { unstable_noStore } from "next/cache";
+import { DEFAULT_REVALIDATE, FILTER_ALL } from "@/app/_util/constants";
+import Filter from "@/app/_components/Filter";
+import ReservationReminder from "@/app/_components/ReservationReminder";
 
-export const revalidate = 15
+// TODO 如果 noStore 和 revalidate同时存在，noStore生效
+export const revalidate = DEFAULT_REVALIDATE
 
-export default async function Page() {
+export default async function Page({ searchParams }) {
 
     // TODO  always refresh <==> revalidate = 0
-    unstable_noStore()
+    // noStore()
+    const filter = (await searchParams)?.capacity || FILTER_ALL
 
     return (
         <div>
@@ -23,8 +27,13 @@ export default async function Page() {
                 away from home. The perfect spot for a peaceful, calm vacation. Welcome
                 to paradise.
             </p>
-            <Suspense fallback={ <Loading /> }>
-                <Cabins />
+            <div className="flex justify-end mb-8">
+                <Filter />
+            </div>
+            {/* key 让每一次筛选都 loading一次 */ }
+            <Suspense fallback={ <Loading /> } key={ filter }>
+                <Cabins filter={ filter } />
+                <ReservationReminder />
             </Suspense>
         </div>
     );

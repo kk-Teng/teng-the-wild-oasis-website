@@ -1,7 +1,10 @@
 import { EyeSlashIcon, MapPinIcon, UsersIcon } from "@heroicons/react/24/solid";
 import Image from "next/image";
 import { getCabin, getCabins } from "@/app/_lib/data-service";
-import { unstable_noStore } from "next/cache";
+import TextExpander from "@/app/_components/TextExpander";
+import Reservation from "@/app/_components/Reservation";
+import { Suspense } from "react";
+import Spinner from "@/app/_components/Spinner";
 
 // TODO data will be always new for every request when revalidate equals to 0. You can think it's interval of fetching data from server to fresh page.
 // TODO seconds
@@ -27,13 +30,14 @@ export async function generateStaticParams() {
 }
 
 
-
 export default async function Page({ params }) {
 
     const { cabinId } = await params
 
+    const cabin = await getCabin(cabinId)
+
     const { id, name, maxCapacity, regularPrice, discount, image, description }
-        = await getCabin(cabinId);
+        = cabin;
 
     return (
         <div className="max-w-7xl mx-auto select-none mt-8">
@@ -47,7 +51,11 @@ export default async function Page({ params }) {
                         Cabin { name }
                     </h3>
 
-                    <p className="text-lg text-slate-300 mb-10">{ description }</p>
+                    {/* TODO client component */ }
+                    <p className="text-lg text-slate-300 mb-10">
+                        <TextExpander>{ description }</TextExpander>
+                    </p>
+
 
                     <ul className="flex flex-col gap-4 mb-7">
                         <li className="flex gap-3 items-center">
@@ -70,10 +78,13 @@ export default async function Page({ params }) {
                 </div>
             </div>
 
-            <div>
-                <h2 className="text-5xl font-semibold text-center">
-                    Reserve today. Pay on arrival.
+            <div className={ 'mb-12' }>
+                <h2 className="text-yellow-500 mb-12 text-5xl font-semibold text-center">
+                    Reserve { name } today. Pay on arrival.
                 </h2>
+                <Suspense fallback={ <Spinner /> }>
+                    <Reservation cabin={ cabin } />
+                </Suspense>
             </div>
         </div>
     );

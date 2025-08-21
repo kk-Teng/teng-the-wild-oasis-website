@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import 'tailwindcss/theme.css';
 
 @tailwind base;
 @tailwind components;
@@ -33,9 +34,9 @@
 }
 
 /* For data picker */
-.rdp {
+.rdp-root {
     --rdp-cell-size: 32px !important;
-    --rdp-accent-color: theme('colors.yellow.500') !important;
-    --rdp-background-color: theme('colors.yellow.600') !important;
+    --rdp-accent-color: var(--color-yellow-500) !important;
+    --rdp-accent-background-color: var(--color-yellow-600) !important;
     margin: 0 !important;
 }
