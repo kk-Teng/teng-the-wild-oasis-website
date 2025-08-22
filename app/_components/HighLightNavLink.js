@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 
 export default (
     {
+        prefetch = true,
         children,
         href,
         normalClassName,
@@ -18,6 +19,6 @@ export default (
     const className = `${ normalClassName } ${ (testIfHighLight(pathname, href) ? highLightClassName : "") }`
 
     return (
-        <Link href={ href } className={ className }>{ children }</Link>
+        <Link href={ href } className={ className } prefetch={ prefetch }>{ children }</Link>
     );
 }

@@ -21,7 +21,7 @@ export const { handlers: { GET, POST }, auth, signIn, signOut } = NextAuth({
                 return false
             }
         },
-        // TODO middleware session
+        // TODO middleware session, 是每次调用auth()都会触发吗?
         async session({ session }) {
             const currentGuest = await getGuest(session.user.email)
             session.guestId = currentGuest.id

@@ -1,6 +1,8 @@
 import { PencilSquareIcon } from '@heroicons/react/24/solid';
 import { format, formatDistance, isPast, isToday, parseISO } from 'date-fns';
 import DeleteReservation from './DeleteReservation';
+import Image from "next/image";
+import Link from "next/link";
 
 export const formatDistanceFromNow = (dateStr) =>
     formatDistance(parseISO(dateStr), new Date(), {
@@ -16,15 +18,15 @@ function ReservationCard({ booking }) {
         numNights,
         totalPrice,
         numGuests,
-        status,
         created_at,
         cabins: { name, image },
     } = booking;
-
+    const isOutOfDay = isPast(new Date(startDate))
     return (
         <div className='flex border border-slate-800'>
             <div className='relative h-32 aspect-square'>
-                <img
+                <Image
+                    fill
                     src={ image }
                     alt={ `Cabin ${ name }` }
                     className='object-cover border-r border-slate-800'
@@ -36,16 +38,16 @@ function ReservationCard({ booking }) {
                     <h3 className='text-xl font-semibold'>
                         { numNights } nights in Cabin { name }
                     </h3>
-                    { isPast(new Date(startDate)) ? (
+                    { isOutOfDay ? (
                         <span
                             className='bg-yellow-800 text-yellow-200 h-7 px-3 uppercase text-xs font-bold flex items-center rounded-sm'>
-              past
-            </span>
+                              past
+                        </span>
                     ) : (
                         <span
                             className='bg-green-800 text-green-200 h-7 px-3 uppercase text-xs font-bold flex items-center rounded-sm'>
-              upcoming
-            </span>
+                              upcoming
+                        </span>
                     ) }
                 </div>
 
@@ -70,14 +72,16 @@ function ReservationCard({ booking }) {
             </div>
 
             <div className='flex flex-col border-l border-slate-800 w-[100px]'>
-                <a
-                    href={ `/account/reservations/edit/${ id }` }
-                    className='group flex items-center gap-2 uppercase text-xs font-bold text-slate-300 border-b border-slate-800 flex-grow px-3 hover:bg-yellow-600 transition-colors hover:text-slate-900'
-                >
-                    <PencilSquareIcon
-                        className='h-5 w-5 text-slate-600 group-hover:text-slate-800 transition-colors' />
-                    <span className='mt-1'>Edit</span>
-                </a>
+                { !isOutOfDay &&
+                    <Link
+                        href={ `/account/reservations/edit/${ id }` }
+                        className='group flex items-center gap-2 uppercase text-xs font-bold text-slate-300 border-b border-slate-800 flex-grow px-3 hover:bg-yellow-600 transition-colors hover:text-slate-900'
+                    >
+                        <PencilSquareIcon
+                            className='h-5 w-5 text-slate-600 group-hover:text-slate-800 transition-colors' />
+                        <span className='mt-1'>Edit</span>
+                    </Link>
+                }
                 <DeleteReservation bookingId={ id } />
             </div>
         </div>

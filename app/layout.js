@@ -4,6 +4,7 @@ import '@/app/_styles/globals.css'
 import Header from "@/app/_components/Header";
 import Footer from "@/app/_components/Footer";
 import { ReservationContextProvider } from "@/app/_components/ReservationContext";
+import { Toaster } from "react-hot-toast";
 
 const josefin = Josefin_Sans({
     subsets: ['latin'],
@@ -33,6 +34,12 @@ export default function RootLayout({ children }) {
                     </main>
                 </div>
                 <Footer />
+                <Toaster
+                    position={ 'top-center' }
+                    reverseOrder={ false }
+                    gutter={ 12 }
+                    toastOptions={ { duration: 2500 } }
+                />
             </body>
         </html>
     );

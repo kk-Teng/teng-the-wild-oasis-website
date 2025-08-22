@@ -29,6 +29,7 @@ function SideNavigation() {
                 { navLinks.map((link) => (
                     <li key={ link.name }>
                         <HighLightNavLink
+                            prefetch={ false }
                             href={ link.href }
                             normalClassName={ 'py-3 px-5 hover:bg-slate-800 hover:text-slate-100 transition-colors flex items-center gap-4 font-semibold text-slate-200' }
                             highLightClassName={ 'bg-slate-800 text-slate-100' }

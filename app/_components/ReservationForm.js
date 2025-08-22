@@ -1,10 +1,23 @@
 'use client';
 
 import Guest from "@/app/_components/Guest";
+import { doCreateBooking } from "@/app/_action/booking";
+import SubmitButton from "@/app/_components/SubmitButton";
+import { useReservationContext } from "@/app/_components/ReservationContext";
+import { differenceInCalendarDays } from "date-fns";
 
-async function ReservationForm({ user, cabin }) {
+function ReservationForm({ user, cabin }) {
 
     const { maxCapacity } = cabin
+    const { range } = useReservationContext()
+
+    const newBooking = {
+        startDate: range.from,
+        endDate: range.to,
+        numNights: differenceInCalendarDays(range.to, range.from),
+        cabinId: cabin.id,
+        cabinPrice: cabin.regularPrice,
+    }
 
     return (
         <div className={ 'flex flex-col' }>
@@ -13,7 +26,8 @@ async function ReservationForm({ user, cabin }) {
                 <Guest image={ user.image } text={ user.name } />
             </div>
 
-            <form className='bg-slate-800 flex-1 py-10 px-16 text-lg flex gap-5 flex-col'>
+            <form className='bg-slate-800 flex-1 py-10 px-16 text-lg flex gap-5 flex-col' action={ doCreateBooking }>
+                <input type={ 'hidden' } name={ 'newBooking' } value={ JSON.stringify(newBooking) } />
                 <div className='space-y-2'>
                     <label htmlFor='numGuests'>How many guests?</label>
                     <select
@@ -47,11 +61,7 @@ async function ReservationForm({ user, cabin }) {
 
                 <div className='flex justify-end items-center gap-6'>
                     <p className='text-slate-300 text-base'>Start by selecting dates</p>
-
-                    <button
-                        className='bg-yellow-500 px-8 py-4 text-slate-800 font-semibold hover:bg-accent-600 transition-all disabled:cursor-not-allowed disabled:bg-gray-500 disabled:text-gray-300'>
-                        Reserve now
-                    </button>
+                    <SubmitButton text={ 'Reserve now' } pendingText={ 'Reserving for you now...' } />
                 </div>
             </form>
         </div>

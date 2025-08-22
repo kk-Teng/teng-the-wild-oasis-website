@@ -1,17 +1,17 @@
-import SelectCountry from "@/app/_components/SelectCountry";
 import UpdateProfileForm from "@/app/_components/UpdateProfileForm";
 import { auth } from "@/app/_lib/auth";
-import { getGuest } from "@/app/_lib/data-service";
+import { getCountries, getGuest } from "@/app/_lib/data-service";
 
 export const metadata = {
     title: 'profile'
 }
 
+export const revalidate = 0
+
 export default async function Page() {
-    // CHANGE
     const session = await auth()
     const currentGuest = await getGuest(session.user.email)
-    const { nationality } = currentGuest
+    const countriesPromise = getCountries()
 
     return (
         <div>
@@ -24,14 +24,7 @@ export default async function Page() {
                 faster and smoother. See you soon!
             </p>
 
-            <UpdateProfileForm>
-                <SelectCountry
-                    name="nationality"
-                    id="nationality"
-                    className="px-5 py-3 bg-slate-200 text-slate-800 w-full shadow-sm rounded-sm"
-                    defaultCountry={ nationality }
-                />
-            </UpdateProfileForm>
+            <UpdateProfileForm guest={ currentGuest } countriesPromise={ countriesPromise } />
         </div>
     );
 }
