@@ -1,4 +1,5 @@
-'use client'
+'use client';
+
 import { CalendarDaysIcon, HomeIcon, UserIcon, } from '@heroicons/react/24/solid';
 import SignOutButton from './SignOutButton';
 import HighLightNavLink from "@/app/_components/HighLightNavLink";

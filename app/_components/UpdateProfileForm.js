@@ -4,7 +4,7 @@ import { useState } from "react";
 
 export default ({ children }) => {
 
-    const countryFlag = "pt.jpg";
+    const countryFlag = "https://flagcdn.com/cn.svg";
     const [fullName, setFullName] = useState("")
     const [emailAddress, setEmailAddress] = useState("")
     const [nationality, setNationality] = useState("")

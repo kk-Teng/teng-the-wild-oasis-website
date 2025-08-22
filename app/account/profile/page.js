@@ -1,13 +1,17 @@
 import SelectCountry from "@/app/_components/SelectCountry";
 import UpdateProfileForm from "@/app/_components/UpdateProfileForm";
+import { auth } from "@/app/_lib/auth";
+import { getGuest } from "@/app/_lib/data-service";
 
 export const metadata = {
     title: 'profile'
 }
 
-export default function Page() {
+export default async function Page() {
     // CHANGE
-    const nationality = "portugal";
+    const session = await auth()
+    const currentGuest = await getGuest(session.user.email)
+    const { nationality } = currentGuest
 
     return (
         <div>
