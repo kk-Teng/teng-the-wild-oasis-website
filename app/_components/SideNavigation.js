@@ -22,6 +22,11 @@ const navLinks = [
     },
 ];
 
+// TODO highlight, 能力有限，只能用这么简单这么蠢的方式来做
+function testIfHighLight(pathname, href) {
+    return pathname === href || href === '/account/reservations' && pathname.startsWith(href)
+}
+
 function SideNavigation() {
     return (
         <nav className='border-r border-slate-900'>
@@ -33,7 +38,7 @@ function SideNavigation() {
                             href={ link.href }
                             normalClassName={ 'py-3 px-5 hover:bg-slate-800 hover:text-slate-100 transition-colors flex items-center gap-4 font-semibold text-slate-200' }
                             highLightClassName={ 'bg-slate-800 text-slate-100' }
-                            testIfHighLight={ (pathname, href) => pathname.endsWith(href) }
+                            testIfHighLight={ testIfHighLight }
                         >
                             { link.icon }
                             <span>{ link.name }</span>

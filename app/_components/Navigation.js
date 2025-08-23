@@ -9,10 +9,13 @@ export default async function Navigation() {
     return (
         <ul className={ 'flex gap-16 z-10 items-center' }>
             <li>
-                <HighLightNavLink href={ 'cabins' }
-                                  highLightClassName={ 'text-yellow-500' }
-                                  normalClassName={ 'hover:text-yellow-500 transition-colors text-xl' }
-                >Cabins</HighLightNavLink>
+                <HighLightNavLink
+                    href={ 'cabins' }
+                    highLightClassName={ 'text-yellow-500' }
+                    normalClassName={ 'hover:text-yellow-500 transition-colors text-xl' }
+                >
+                    Cabins
+                </HighLightNavLink>
             </li>
             <li>
                 <HighLightNavLink

@@ -1,8 +1,8 @@
 'use server';
 
 import { auth } from "@/app/_lib/auth";
-import { revalidatePath } from "next/cache";
 import { supabase } from "@/app/_lib/supabase";
+import { redirect } from "next/navigation";
 
 export async function doUpdateGuest(formData) {
     // TODO action其实已经是后端的范畴，所以要进行身份验证。其实后面也要用到ID
@@ -25,5 +25,5 @@ export async function doUpdateGuest(formData) {
     if (error) {
         throw new Error(`Update Failure: ${ error.message }`)
     }
-    revalidatePath('/account', 'page')
+    redirect('/account/profile')
 }

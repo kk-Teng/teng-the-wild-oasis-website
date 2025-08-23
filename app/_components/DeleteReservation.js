@@ -3,26 +3,29 @@
 import { TrashIcon } from '@heroicons/react/24/solid';
 import { useTransition } from "react";
 import SpinnerMini from "@/app/_components/SpinnerMini";
-import { deleteReservation } from "@/app/_action/reservation";
 import toast from "react-hot-toast";
-import CustomToast from "@/app/_components/CustomToast";
-import customToast from "@/app/_util/custom-toast";
+import { CheckCircleIcon } from "@heroicons/react/16/solid";
+import { deleteReservation } from "@/app/_action/reservation";
 
 function DeleteReservation({ bookingId }) {
     // const [state/response, action, isPending] = useActionState(() => deleteReservation(bookingId))
-    const [isPending, startTransition] = useTransition()
+    const [isPending, startDeleteReservationTransition] = useTransition()
 
     function handleDeleteReservation() {
-        startTransition(async () => {
+        startDeleteReservationTransition(async () => {
             await deleteReservation(bookingId)
-            startTransition(() => {
-                toast.custom(<CustomToast message={ 'delete successfully' } />)
-            })
+            // TODO 弹出来了结果DeleteReservation还在转
+            toast.custom(t => {
+                return (
+                    <div
+                        className={ `flex transition-all -translate-y-4 gap-2 items-center justify-center bg-slate-700 text-slate-50 px-4 py-3 mb-2 shadow-lg ${ t.visible ? 'translate-y-0 opacity-100' : '-translate-y-2.5 opacity-0' }` }>
+                        <CheckCircleIcon className={ 'h-4 w-4' } />
+                        <span>{ `booking ${ bookingId } delete successfully !` }</span>
+                    </div>
+                )
+            }, { duration: 3000 })
         })
     }
-
-    // TODO
-    customToast.success('delete', { duration: 50000 })
 
     return (
         <>
