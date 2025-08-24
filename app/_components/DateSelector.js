@@ -1,5 +1,5 @@
 'use client'
-import { isWithinInterval } from "date-fns";
+import { differenceInDays, isPast, isSameDay, isWithinInterval } from "date-fns";
 import { DayFlag, DayPicker, SelectionState, UI } from "react-day-picker";
 import { useReservationContext } from "@/app/_components/ReservationContext";
 
@@ -13,6 +13,13 @@ function isAlreadyBooked(range, datesArr) {
     );
 }
 
+const hasAlreadyBooked = (date, bookedDates) => bookedDates.some(bookedDate => isSameDay(date, bookedDate))
+
+function isWithinMinInterval(range, date, minBookingLength) {
+    const { from, to } = range
+    return from && !to && !isSameDay(new Date(from), date) && Math.abs(differenceInDays(date, new Date(from))) <= minBookingLength
+}
+
 function DateSelector({ bookedDates, cabin, settings }) {
 
     const { range, setRange, resetRange } = useReservationContext()
@@ -20,15 +27,23 @@ function DateSelector({ bookedDates, cabin, settings }) {
     const {
         regularPrice,
         discount,
-        cabinPrice,
-        numNights
     } = cabin
 
+    const displayRange = range
+
+    const numNights = Math.abs(differenceInDays(displayRange.to, displayRange.from)) || 0
+    const cabinPrice = (regularPrice - discount) * numNights
+
     const { maxBookingLength, minBookingLength } = settings
+
+    function handleSelect(_, value) {
+        setRange(value, minBookingLength, maxBookingLength)
+    }
 
     return (
         <div className="flex flex-col justify-between rdp">
             <DayPicker
+                disabled={ (curDate) => isPast(curDate) || isWithinMinInterval(displayRange, curDate, minBookingLength) || hasAlreadyBooked(curDate, bookedDates) }
                 className="pt-12 place-self-center"
                 excludeDisabled
                 classNames={ {
@@ -40,13 +55,10 @@ function DateSelector({ bookedDates, cabin, settings }) {
                     [SelectionState.range_end]: 'rounded-full rounded-l-none text-yellow-500 bg-slate-900 bg-yellow-100',
                     [SelectionState.range_middle]: 'text-yellow-500 bg-slate-900 bg-yellow-100',
                 } }
-                selected={ range }
-                onSelect={ setRange }
-                animate
+                selected={ displayRange }
+                onSelect={ handleSelect }
                 hideNavigation
                 mode="range"
-                min={ minBookingLength + 1 }
-                max={ maxBookingLength }
                 startMonth={ new Date() }
                 today={ new Date() }
                 captionLayout="dropdown"

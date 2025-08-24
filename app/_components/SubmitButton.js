@@ -1,10 +1,13 @@
 'use client';
 import { useFormStatus } from "react-dom";
+import { useImperativeHandle } from "react";
 
-export default function SubmitButton({ text, pendingText }) {
+export default function SubmitButton({ text, pendingText, ref }) {
 
     // TODO to get form status, submit component must be render within a form
     const { pending } = useFormStatus()
+
+    useImperativeHandle(ref, () => ({ pending }))
 
     return (
         <button

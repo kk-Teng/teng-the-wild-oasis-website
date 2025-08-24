@@ -4,13 +4,14 @@ import Guest from "@/app/_components/Guest";
 
 export default async function Navigation() {
     const session = await auth()
-    const isAuthenticated = session?.user !== undefined
+
+    // /account 是绝对路径，account是相对路径
 
     return (
         <ul className={ 'flex gap-16 z-10 items-center' }>
             <li>
                 <HighLightNavLink
-                    href={ 'cabins' }
+                    href={ '/cabins' }
                     highLightClassName={ 'text-yellow-500' }
                     normalClassName={ 'hover:text-yellow-500 transition-colors text-xl' }
                 >
@@ -19,7 +20,7 @@ export default async function Navigation() {
             </li>
             <li>
                 <HighLightNavLink
-                    href={ 'about' }
+                    href={ '/about' }
                     highLightClassName={ 'text-yellow-500' }
                     normalClassName={ 'hover:text-yellow-500 transition-colors text-xl' }
                 >
@@ -29,7 +30,7 @@ export default async function Navigation() {
             <li>
                 {
                     <HighLightNavLink
-                        href={ 'account' }
+                        href={ '/account' }
                         highLightClassName={ 'text-yellow-500' }
                         normalClassName={ 'hover:text-yellow-500 transition-colors text-xl' }
                     >

@@ -1,15 +1,23 @@
 'use server'
 
 import { auth } from "@/app/_lib/auth";
+import { createBooking } from "@/app/_lib/data-service";
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
-export async function doCreateBooking(formData) {
+export async function doCreateBooking(newBooking) {
     // name='numGuests'
     // name='observations'
     const session = await auth()
-    const newBooking = JSON.parse(formData.get('newBooking'))
-    newBooking.numGuests = formData.get('numGuests')
-    newBooking.observations = formData.get('observations')
-    newBooking.guestId = session.guestId
-    newBooking.totalPrice = newBooking.cabinPrice * newBooking.numNights
-    console.log(newBooking)
+    if (session === null) {
+        throw new Error('You should be logged in first')
+    }
+    const booking = { ...newBooking, guestId: session.guestId }
+    await createBooking(booking)
+    revalidatePath(`/cabins/${ booking.cabinId }`)
+    redirect('/thankyou')
+}
+
+export async function doCreateBookingV1(bookingData, formData) {
+    console.log(bookingData, formData)
 }

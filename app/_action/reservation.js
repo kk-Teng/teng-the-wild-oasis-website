@@ -6,6 +6,10 @@ import { updateBooking } from "@/app/_lib/data-service";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 
+export async function exportSomethingError() {
+    throw new Error('Something error')
+}
+
 export async function deleteReservation(bookingId) {
     const session = await auth()
     if (session === null) {
@@ -18,7 +22,7 @@ export async function deleteReservation(bookingId) {
     if (error) {
         throw new Error(error.message)
     }
-    redirect('/account/reservations')
+    revalidatePath('/account/reservations')
 }
 
 export async function updateReservation(reservationId, updateFields) {

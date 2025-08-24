@@ -1,42 +1,28 @@
 'use client'
 
 import Guest from "@/app/_components/Guest";
-import { doCreateBooking } from "@/app/_action/booking";
 import SubmitButton from "@/app/_components/SubmitButton";
 import { useReservationContext } from "@/app/_components/ReservationContext";
 import { differenceInDays } from "date-fns";
-import { useTransition } from "react";
+import { doCreateBookingV1 } from "@/app/_action/booking";
 
 function ReservationForm({ user, cabin }) {
 
-    const { maxCapacity, id: cabinId, regularPrice: cabinPrice, discount } = cabin
+    const { maxCapacity, cabinId, regularPrice: cabinPrice, discount } = cabin
     const { range, resetRange } = useReservationContext()
 
-    const { from: startDate, to: endDate } = range
-
-    const [isPending, startTransition] = useTransition()
-
-    function handleSubmit(formData) {
-        const numNights = Math.abs(differenceInDays(endDate, startDate))
-        const newBooking = {
-            startDate,
-            endDate,
-            numNights,
-            cabinId,
-            cabinPrice,
-            numGuests: formData.get('numGuests'),
-            observations: formData.get('observations'),
-            totalPrice: numNights * (cabinPrice - discount),
-            hasBreakfast: false,
-            isPaid: false,
-            extrasPrice: 0,
-            status: 'unconfirmed'
-        }
-        startTransition(async () => {
-            await doCreateBooking(newBooking)
-        })
-        resetRange()
+    const numNights = differenceInDays(range.to, range.from)
+    const newBooking = {
+        startDate: range.from,
+        endDate: range.to,
+        numNights,
+        cabinId,
+        cabinPrice,
+        totalPrice: numNights * (cabinPrice - discount)
     }
+
+    // TODO 除了form hidden input, 还可以这样做
+    const createBookingAction = doCreateBookingV1.bind(null, newBooking)
 
     return (
         <div className={ 'flex flex-col' }>
@@ -45,15 +31,16 @@ function ReservationForm({ user, cabin }) {
                 <Guest image={ user.image } text={ user.name } />
             </div>
 
-            <form className='bg-slate-800 flex-1 py-10 px-16 text-lg flex gap-5 flex-col' action={ handleSubmit }>
+            <form className='bg-slate-800 flex-1 py-10 px-16 text-lg flex gap-5 flex-col'
+                  action={ createBookingAction }
+            >
                 <div className='space-y-2'>
                     <label htmlFor='numGuests'>How many guests?</label>
                     <select
-                        required
-                        disabled={ isPending }
                         name='numGuests'
                         id='numGuests'
                         className="disabled:cursor-not-allowed disabled:bg-gray-600 disabled:text-gray-400 px-5 py-3 bg-slate-200 text-slate-800 w-full shadow-sm rounded-sm"
+                        required
                     >
                         <option value='' key=''>
                             Select number of guests...
@@ -71,8 +58,6 @@ function ReservationForm({ user, cabin }) {
                         Anything we should know about your stay?
                     </label>
                     <textarea
-                        required
-                        disabled={ isPending }
                         name='observations'
                         id='observations'
                         className="disabled:cursor-not-allowed disabled:bg-gray-600 disabled:text-gray-400 px-5 py-3 bg-slate-200 text-slate-800 w-full shadow-sm rounded-sm"
@@ -81,13 +66,10 @@ function ReservationForm({ user, cabin }) {
                 </div>
 
                 <div className='flex justify-end items-center gap-6'>
-                    { startDate && endDate ?
-                        <SubmitButton
-                            text={ 'Reserve now' }
-                            pendingText={ 'Reserving for you now...' }
-                        /> :
+                    { !range.from && !range.to &&
                         <p className='text-slate-300 text-base'>Start by selecting dates</p>
                     }
+                    <SubmitButton text={ 'Reserve now' } pendingText={ 'Reserving for you now...' } />
                 </div>
             </form>
         </div>
