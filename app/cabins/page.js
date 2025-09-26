@@ -6,7 +6,7 @@ import Filter from "@/app/_components/Filter";
 import ReservationReminder from "@/app/_components/ReservationReminder";
 
 // TODO 如果 noStore 和 revalidate同时存在，noStore生效
-export const revalidate = DEFAULT_REVALIDATE
+export const revalidate = 15
 
 export default async function Page({ searchParams }) {
 
